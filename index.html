@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Interactivo Mejorado</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Mapa Interactivo Mejorado</h1>
+        <nav>
+            <ul>
+                <li><a href="#map">Mapa</a></li>
+                <li><a href="#info">Información</a></li>
+                <li><a href="#contact">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div id="map"></div>
+        <section id="info">
+            <h2>Información</h2>
+            <p>Esta es una página de ejemplo con un mapa interactivo utilizando Leaflet.</p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Mapa Interactivo. Todos los derechos reservados.</p>
+    </footer>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Inicializar el mapa centrado en Cataluña
+        var map = L.map('map', {
+            center: [41.387412363640465, 2.1685600267786738], // Coordenadas de Barcelona
+            zoom: 9, // Zoom inicial para ver toda Cataluña
+            minZoom: 8, // Limitar el zoom mínimo
+            maxZoom: 15, // Limitar el zoom máximo
+            maxBounds: [[40.5, 0.15], [42.9, 3.4]], // Establecer límites geográficos para Cataluña
+            maxBoundsViscosity: 1.0 // Hacer más restrictivo el límite para que no salga fuera
+        });
+
+        // Agregar la capa de OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Función para crear pop-up con botón "más"
+        function createPopupContent(title, image, shortText, moreText) {
+            return `
+                <b>${title}</b><br>
+                <img src="${image}" alt="Imagen" width="200"><br>
+                <span id="shortText">${shortText}</span>
+                <span id="moreText" style="display:none;">${moreText}</span>
+                <button class="more-btn" onclick="toggleMoreText(event)">Más</button>
+            `;
+        }
+
+        // Función para mostrar/ocultar el texto adicional
+        function toggleMoreText(event) {
+            var moreText = event.target.previousElementSibling;
+            var shortText = moreText.previousElementSibling;
+            var button = event.target;
+
+            if (moreText.style.display === "none") {
+                moreText.style.display = "inline";
+                shortText.style.display = "none";
+                button.innerHTML = "Menos";
+            } else {
+                moreText.style.display = "none";
+                shortText.style.display = "inline";
+                button.innerHTML = "Más";
+            }
+        }
+
+        // Agregar los marcadores con la información de cada ubicación
+        var locations = [
+            [41.382860895277624, 2.1767087600753108, "Palau de la Generalitat de Catalunya", "images/palau.jpg", "Descripción corta del Palau de la Generalitat.", "Descripción detallada del Palau de la Generalitat."],
+            [41.38252600407564, 2.177226320273733, "Ajuntament, Pl. de Sant Jaume", "images/ajuntament.jpg", "Descripción corta del Ajuntament.", "Descripción detallada del Ajuntament."],
+            [41.36734318304792, 2.155832428248664, "Palauet Albéniz", "images/palauet.jpg", "Descripción corta del Palauet Albéniz.", "Descripción detallada del Palauet Albéniz."],
+            [41.39380251404793, 2.109980162737733, "Pedralbes", "images/pedralbes.jpg", "Descripción corta de Pedralbes.", "Descripción detallada de Pedralbes."],
+            [41.40989702423967, 2.203495565254252, "Ca l'Alier", "images/ca-l-alier.jpg", "Descripción corta de Ca l'Alier.", "Descripción detallada de Ca l'Alier."],
+            [41.395473810575005, 2.169523618313731, "AOC Carrer marroc", "images/aoc.jpg", "Descripción corta del AOC Carrer marroc.", "Descripción detallada del AOC Carrer marroc."],
+            [41.402774963938285, 2.1921036196421904, "UB", "images/ub.jpg", "Descripción corta de la UB.", "Descripción detallada de la UB."],
+            [41.27551867175553, 1.989716539456329, "Institut de Ciències Fotòniques", "images/icf.jpg", "Descripción corta del Institut de Ciències Fotòniques.", "Descripción detallada del Institut de Ciències Fotòniques."],
+            [41.35187969009681, 2.1241617356114944, "CTTI Centre de Telecomunicacions i Tecnologies de la Informació", "images/ctti.jpg", "Descripción corta del CTTI.", "Descripción detallada del CTTI."],
+            [41.5008456858558, 2.10517605477521, "Facultat de Dret - UAB", "images/uab-dret.jpg", "Descripción corta de la Facultat de Dret - UAB.", "Descripción detallada de la Facultat de Dret - UAB."],
+            [41.497526879321086, 2.108913515715553, "Institut de Ciència i Tecnologia Ambientals", "images/icta.jpg", "Descripción corta del ICTA.", "Descripción detallada del ICTA."]
+        ];
+
+        locations.forEach(function(location) {
+            var marker = L.marker([location[0], location[1]]).addTo(map);
+            var popupContent = createPopupContent(location[2], location[3], location[4], location[5]);
+            marker.bindPopup(popupContent);
+        });
+    </script>
+</body>
+</html>

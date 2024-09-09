@@ -1,0 +1,131 @@
+/* Estilos generales */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(0, 255, 49); /* Fondo verde brillante */
+    color: #fff; /* Texto blanco para mayor contraste */
+    line-height: 1.6;
+}
+
+header {
+    background-color: #2c3e50; /* Azul oscuro */
+    color: white;
+    padding: 1.5rem 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Sombra elegante */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0;
+}
+
+nav ul li {
+    display: inline-block;
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transición suave */
+}
+
+nav ul li a:hover {
+    background-color: #3498db; /* Azul claro al hacer hover */
+    color: #fff;
+}
+
+main {
+    padding: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+#map {
+    height: 70vh;
+    width: 100%;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra alrededor del mapa */
+}
+
+section#info {
+    margin-top: 2rem;
+    padding: 2rem;
+    background-color: #ecf0f1; /* Fondo gris claro para la sección */
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    color: #2c3e50; /* Texto gris oscuro */
+}
+
+footer {
+    background-color: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    font-size: 0.9rem;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3); /* Sombra para el footer */
+}
+
+/* Estilos para el botón "más" */
+.more-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 25px; /* Aumentamos el padding */
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #3498db; /* Fondo azul moderno */
+    border: none; /* Quitamos el borde */
+    border-radius: 30px; /* Más redondeado */
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave */
+    transition: all 0.4s ease; /* Animación más suave y global */
+    position: relative;
+    overflow: hidden;
+}
+
+.more-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: all 0.75s cubic-bezier(0.19, 1, 0.22, 1);
+    transform: translate(-50%, -50%) scale(0);
+    border-radius: 50%;
+}
+
+.more-btn:hover::before {
+    transform: translate(-50%, -50%) scale(1); /* Efecto de expansión suave al pasar el ratón */
+}
+
+.more-btn:hover {
+    background-color: #2980b9; /* Cambiamos el fondo del botón en hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada al pasar el ratón */
+}
+
+.more-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
