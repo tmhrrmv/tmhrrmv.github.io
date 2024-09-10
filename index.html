@@ -36,7 +36,7 @@
             center: [41.387412363640465, 2.1685600267786738], // Coordenadas de Barcelona
             zoom: 9, // Zoom inicial para ver toda Cataluña
             minZoom: 8, // Limitar el zoom mínimo
-            maxZoom: 15, // Limitar el zoom máximo
+            maxZoom: 18, // Limitar el zoom máximo
             maxBounds: [[40.5, 0.15], [42.9, 3.4]], // Establecer límites geográficos para Cataluña
             maxBoundsViscosity: 1.0 // Hacer más restrictivo el límite para que no salga fuera
         });
@@ -76,11 +76,19 @@
 
         // Agregar los marcadores con la información de cada ubicación
         var locations = [
-            [41.36734318304792, 2.155832428248664, "Palauet Albéniz", "https://github.com/tmhrrmv/tmhrrmv.github.io/blob/main/Fotos/PalauetAlbeniz.jpg?raw=true", "Descripción corta del Palauet Albéniz.", "Descripción detallada del Palauet Albéniz."],
-            [41.39380251404793, 2.109980162737733, "Pedralbes", "https://github.com/tmhrrmv/tmhrrmv.github.io/blob/main/Fotos/Pedralbes.jpg?raw=true", "Descripción corta de Pedralbes.", "Descripción detallada de Pedralbes."],
-            [41.402774963938285, 2.1921036196421904, "UB", "https://github.com/tmhrrmv/tmhrrmv.github.io/blob/main/Fotos/UB.jpg?raw=true", "Descripción corta de la UB.", "Descripción detallada de la UB."],
+            [41.36734318304792, 2.155832428248664, "Palauet Albéniz", "https://github.com/tmhrrmv/tmhrrmv.github.io/blob/main/Fotos/PalauetAlbeniz.jpg?raw=true", "", ""],
+            [41.39380251404793, 2.109980162737733, "Pedralbes", "https://github.com/tmhrrmv/tmhrrmv.github.io/blob/main/Fotos/Pedralbes.jpg?raw=true", "", ""],
+            [41.402774963938285, 2.1921036196421904, "UB", "https://github.com/tmhrrmv/tmhrrmv.github.io/blob/main/Fotos/UB.jpg?raw=true", "", ""],
+            [41.85589133403895, 3.1191014601932507, "Casa de Colònies Mas Gorgoll", "https://github.com/tmhrrmv/tmhrrmv.github.io/blob/main/Fotos/Casa%20de%20Col%C3%B2nies%20Mas%20Gorgoll.jpg?raw=true", "", ""],
+            [41.37944566682951, 2.0889271221406345, "Can Corberó", "https://github.com/tmhrrmv/tmhrrmv.github.io/blob/main/Fotos/Can%20Corber%C3%B3.jpg?raw=true", "", ""],
+            [41.382845483076665, 2.176702260543565, "Palau de la Generalitat de Catalunya", "https://github.com/tmhrrmv/tmhrrmv.github.io/blob/main/Fotos/Palau%20de%20la%20Generalitat%20de%20Catalunya.jpg?raw=true", "", ""],
+            [41.33934138445381, 2.122955461047761, "Consorci de la Zona Franca", "https://github.com/tmhrrmv/tmhrrmv.github.io/blob/main/Fotos/Consorci%20de%20la%20Zona%20Franca.jpg?raw=true", "", ""],
+            [41.38795974508011, 2.1887106028372503, "Parlament de Catalunya", "https://github.com/tmhrrmv/tmhrrmv.github.io/blob/main/Fotos/Parlament%20de%20Catalunya.jpg?raw=true", "", ""],
+            [41.3823837515951, 2.177365423393317, "Ajuntament de Barcelona", "https://github.com/tmhrrmv/tmhrrmv.github.io/blob/main/Fotos/Ajuntament%20de%20Barcelona.jpg?raw=true", "", ""],
+            [41.396031897207834, 2.159458845623265, "Palau Robert", "https://github.com/tmhrrmv/tmhrrmv.github.io/blob/main/Fotos/Palau%20Robert.jpg?raw=true", "", ""],
+            [41.41500452786303, 2.1733925340148077, "Hospital de Sant Pau", "https://github.com/tmhrrmv/tmhrrmv.github.io/blob/main/Fotos/Hospital%20de%20Sant%20Pau.jpg?raw=true", "", ""],
+            [41.50214188245071, 2.1038556393685144, "Universitat Autònoma de Barcelona (UAB)", "https://github.com/tmhrrmv/tmhrrmv.github.io/blob/main/Fotos/Universitat%20Aut%C3%B2noma%20de%20Barcelona%20(UAB).jpg?raw=true  ", "", ""],
 
-            
         ];
 
         locations.forEach(function(location) {
