@@ -26,7 +26,7 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-document.querySelectorAll('.skill-card, .project-card, .language-item, .contact-item').forEach(el => {
+document.querySelectorAll('.skill-card, .project-card, .language-item, .contact-item, .experience-card').forEach(el => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(20px)';
     el.style.transition = 'all 0.6s ease-out';
