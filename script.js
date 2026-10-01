@@ -1,163 +1,157 @@
 // ============================================
-// TELMAN MAHARRAMOV — PORTFOLIO SCRIPTS
+// TELMAN MAHARRAMOV — WAYNE-TECH OS (BATMAN BEYOND)
 // ============================================
 
-// ---- Smooth Scroll ----
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (!target) return;
-        const offset = 80;
-        const targetPosition = target.offsetTop - offset;
+document.addEventListener('DOMContentLoaded', () => {
+    // ---- Elements ----
+    const initialScreen = document.getElementById('initialScreen');
+    const bootBtn = document.getElementById('bootSystemBtn');
+    const loadingScreen = document.getElementById('loadingScreen');
+    const loadingBarFill = document.getElementById('loadingBarFill');
+    const loadingStatusText = document.getElementById('loadingStatusText');
+    const loadingPercent = document.getElementById('loadingPercent');
+    const loadingSubDetail = document.getElementById('loadingSubDetail');
+    const osDesktop = document.getElementById('osDesktop');
+    const lockBtn = document.getElementById('lockSystemBtn');
+    const osClock = document.getElementById('osLiveClock');
 
-        window.scrollTo({
-            top: targetPosition,
-            behavior: 'smooth'
+    const folderModal = document.getElementById('folderModalOverlay');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const modalTitle = document.getElementById('modalHeaderTitle');
+    const modalBody = document.getElementById('modalBodyContent');
+    const folderItems = document.querySelectorAll('.folder-item');
+
+    // ---- Live Clock ----
+    function updateClock() {
+        if (!osClock) return;
+        const now = new Date();
+        osClock.textContent = now.toTimeString().split(' ')[0] + ' UTC';
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // ---- Cursor Glow ----
+    const cursorGlow = document.getElementById('cursorGlow');
+    if (cursorGlow) {
+        window.addEventListener('mousemove', (e) => {
+            cursorGlow.style.left = e.clientX + 'px';
+            cursorGlow.style.top = e.clientY + 'px';
         });
-
-        // Close mobile menu if open
-        const navMenu = document.getElementById('navMenu');
-        const navToggle = document.getElementById('navToggle');
-        if (navMenu && navMenu.classList.contains('active')) {
-            navMenu.classList.remove('active');
-            navToggle.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-    });
-});
-
-// ---- Mobile Nav Toggle ----
-const navToggle = document.getElementById('navToggle');
-const navMenu = document.getElementById('navMenu');
-
-if (navToggle && navMenu) {
-    navToggle.addEventListener('click', () => {
-        navToggle.classList.toggle('active');
-        navMenu.classList.toggle('active');
-        document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
-    });
-}
-
-// ---- Nav Scroll Effect ----
-const nav = document.getElementById('mainNav');
-let lastScroll = 0;
-
-window.addEventListener('scroll', () => {
-    const currentScroll = window.pageYOffset;
-
-    if (nav) {
-        if (currentScroll > 50) {
-            nav.classList.add('scrolled');
-        } else {
-            nav.classList.remove('scrolled');
-        }
     }
 
-    lastScroll = currentScroll;
-}, { passive: true });
-
-// ---- Intersection Observer for Reveal Animations ----
-const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            // Don't unobserve — keep it visible
+    // ---- Live Crisp Terminal on Initial Screen ----
+    const termContainer = document.getElementById('heroTerminalBg');
+    if (termContainer) {
+        const commands = [
+            "root@beyond-hub:~# sudo -u Tm.Bynd --init-net --stealth",
+            "[SYS_BOOT] Neo-Gotham SecOps kernel 6.4.0-beyond initialized [OK]",
+            "root@beyond-hub:~# ifconfig eth0 10.240.12.88 netmask 255.255.255.0 up",
+            "root@beyond-hub:~# ip route add default via 10.240.12.1 dev eth0",
+            "[VLAN_SEG] Configuring 802.1Q trunk on port ge-0/0/1... [VLAN 10, 20, 30 TAGGED]",
+            "root@beyond-hub:~# ping -c 4 10.254.0.1 (round-trip = 0.32/0.41/0.55 ms)",
+            "root@beyond-hub:~# nmap -sS -p 22,80,443,8080 -T4 192.168.100.0/24",
+            "[PORT_SCAN] 192.168.100.14: 22/tcp OPEN (OpenSSH), 443/tcp OPEN (HTTPS-TLSv1.3)",
+            "root@beyond-hub:~# iptables -A INPUT -i eth0 -p tcp --dport 22 -j ACCEPT",
+            "[MWC_ISE_STREAM] Live RF Telemetry: 5GHz/6GHz interference checked. Noise floor -94dBm",
+            "root@beyond-hub:~# iperf3 -c 10.240.12.1 -p 5201 -t 10 (Bitrate: 9.42 Gbits/sec)",
+            "[SECURITY_AUDIT] L1-L3 diagnostics verified. Rogue AP detection: ZERO threats found.",
+            "root@beyond-hub:~# traceroute to wayne-tower.internal (10.0.0.1) -- [REACHED]",
+            "[STATUS] Operative Telman Maharramov: NET_SPECIALIST // ASIR ACTIVE"
+        ];
+        let idx = 0;
+        function addLine() {
+            const div = document.createElement('div');
+            div.className = 'cmd-line';
+            div.innerHTML = '<span class="cmd-prompt">&gt;</span>' + commands[idx % commands.length];
+            termContainer.appendChild(div);
+            idx++;
+            while (termContainer.children.length > 24) {
+                termContainer.removeChild(termContainer.firstChild);
+            }
         }
-    });
-}, {
-    threshold: 0.1,
-    rootMargin: '0px 0px -60px 0px'
-});
+        for (let i = 0; i < 16; i++) addLine();
+        setInterval(addLine, 1500);
+    }
 
-document.querySelectorAll('.reveal-up').forEach(el => {
-    revealObserver.observe(el);
-});
+    // ---- Boot Sequence (On Red Bat Click) ----
+    if (bootBtn) {
+        bootBtn.addEventListener('click', () => {
+            // Hide initial screen
+            initialScreen.classList.add('hide-screen');
 
-// ---- Counter Animation ----
-const counterObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const el = entry.target;
-            const target = parseInt(el.getAttribute('data-count'));
-            if (isNaN(target)) return;
+            // Show Loading Screen
+            loadingScreen.classList.add('active');
 
-            let current = 0;
-            const duration = 1500;
-            const step = Math.max(1, Math.floor(target / (duration / 30)));
-            const timer = setInterval(() => {
-                current += step;
-                if (current >= target) {
-                    current = target;
-                    clearInterval(timer);
+            let progress = 0;
+            const bootStages = [
+                { at: 15, msg: 'ESTABLISHING SECURE PROTOCOL...', sub: 'VERIFYING RSA-4096 SIGNATURE' },
+                { at: 40, msg: 'LOADING SYSTEM KERNEL...', sub: 'INITIALIZING ASIR_NET_SUBSYSTEM' },
+                { at: 70, msg: 'DECRYPTING DOSSIER ARCHIVES...', sub: 'MOUNTING WORKSPACE DIRECTORIES' },
+                { at: 92, msg: 'INITIALIZING GRAPHICAL HUD...', sub: 'BATMAN BEYOND WORKSPACE READY' },
+                { at: 100, msg: 'ACCESS GRANTED.', sub: 'WELCOME, OPERATIVE MAHARRAMOV' }
+            ];
+
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 8) + 4;
+                if (progress > 100) progress = 100;
+
+                loadingBarFill.style.width = progress + '%';
+                loadingPercent.textContent = progress + '%';
+
+                for (let stage of bootStages) {
+                    if (progress >= stage.at) {
+                        loadingStatusText.textContent = stage.msg;
+                        loadingSubDetail.textContent = stage.sub;
+                    }
                 }
-                el.textContent = current;
-            }, 30);
 
-            counterObserver.unobserve(el);
-        }
-    });
-}, { threshold: 0.5 });
-
-document.querySelectorAll('[data-count]').forEach(el => {
-    counterObserver.observe(el);
-});
-
-// ---- Cursor Glow (desktop only) ----
-const cursorGlow = document.getElementById('cursorGlow');
-
-if (cursorGlow && window.matchMedia('(pointer: fine)').matches) {
-    let mouseX = 0, mouseY = 0;
-    let glowX = 0, glowY = 0;
-
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    }, { passive: true });
-
-    function animateGlow() {
-        glowX += (mouseX - glowX) * 0.08;
-        glowY += (mouseY - glowY) * 0.08;
-        cursorGlow.style.left = glowX + 'px';
-        cursorGlow.style.top = glowY + 'px';
-        requestAnimationFrame(animateGlow);
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        loadingScreen.classList.remove('active');
+                        osDesktop.classList.add('active');
+                    }, 400);
+                }
+            }, 220);
+        });
     }
-    animateGlow();
-} else if (cursorGlow) {
-    cursorGlow.style.display = 'none';
-}
 
-// ---- Hero Parallax ----
-const hero = document.querySelector('.hero-content');
-if (hero) {
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        if (scrolled < window.innerHeight) {
-            hero.style.transform = `translateY(${scrolled * 0.3}px)`;
-            hero.style.opacity = 1 - (scrolled / window.innerHeight) * 0.6;
-        }
-    }, { passive: true });
-}
+    // ---- Lock / Exit to Terminal ----
+    if (lockBtn) {
+        lockBtn.addEventListener('click', () => {
+            osDesktop.classList.remove('active');
+            initialScreen.classList.remove('hide-screen');
+        });
+    }
 
-// ---- Details toggle icon animation ----
-document.querySelectorAll('.experience-details').forEach(details => {
-    details.addEventListener('toggle', () => {
-        const icon = details.querySelector('.toggle-icon');
-        if (icon) {
-            icon.textContent = details.open ? '−' : '+';
-        }
+    // ---- Folder Click -> Open Modal Archive ----
+    folderItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const target = item.getAttribute('data-target');
+            const label = item.querySelector('.folder-label').textContent;
+            const dataId = target.replace('modal-', 'data-');
+            const dataElement = document.getElementById(dataId);
+
+            if (dataElement && folderModal) {
+                modalTitle.textContent = 'SECURE ARCHIVE // ' + label.toUpperCase();
+                modalBody.innerHTML = dataElement.innerHTML;
+                folderModal.classList.add('active');
+            }
+        });
     });
-});
 
-// ---- Language level bar animation ----
-const langObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-        }
+    // ---- Close Modal ----
+    function closeModal() {
+        if (folderModal) folderModal.classList.remove('active');
+    }
+
+    if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
+    if (folderModal) {
+        folderModal.addEventListener('click', (e) => {
+            if (e.target === folderModal) closeModal();
+        });
+    }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
     });
-}, { threshold: 0.3 });
-
-document.querySelectorAll('.language-card').forEach(el => {
-    langObserver.observe(el);
 });
