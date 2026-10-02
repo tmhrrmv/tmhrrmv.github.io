@@ -1,5 +1,5 @@
 // ============================================
-// TELMAN MAHARRAMOV
+// TELMAN MAHARRAMOV — WAYNE-TECH OS (BATMAN BEYOND)
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -53,7 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
             "root@beyond-hub:~# iperf3 -c 10.240.12.1 -p 5201 -t 10 (Bitrate: 9.42 Gbits/sec)",
             "[SECURITY_AUDIT] L1-L3 diagnostics verified. Rogue AP detection: ZERO threats found.",
             "root@beyond-hub:~# traceroute to wayne-tower.internal (10.0.0.1) -- [REACHED]",
-            "[STATUS] Operative Telman Maharramov: NET_SPECIALIST // ASIR ACTIVE"
+            "[ACCESS LOG] Clearance: GUEST // USER: VISITOR",
+            "[TARGET DOSSIER] Subject: Telman Maharramov // ASIR & NET_DEFENSE ACTIVE"
         ];
         let idx = 0;
         function addLine() {
@@ -85,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 { at: 40, msg: 'LOADING SYSTEM KERNEL...', sub: 'INITIALIZING ASIR_NET_SUBSYSTEM' },
                 { at: 70, msg: 'DECRYPTING DOSSIER ARCHIVES...', sub: 'MOUNTING WORKSPACE DIRECTORIES' },
                 { at: 92, msg: 'INITIALIZING GRAPHICAL HUD...', sub: 'BATMAN BEYOND WORKSPACE READY' },
-                { at: 100, msg: 'ACCESS GRANTED.', sub: 'WELCOME, OPERATIVE MAHARRAMOV' }
+                { at: 100, msg: 'ACCESS GRANTED.', sub: 'WELCOME, VISITOR' }
             ];
 
             const interval = setInterval(() => {
