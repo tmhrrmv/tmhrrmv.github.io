@@ -1,5 +1,5 @@
 // ============================================
-// TELMAN MAHARRAMOV — WAYNE-TECH OS (BATMAN BEYOND)
+// TELMAN MAHARRAMOV
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -30,13 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateClock, 1000);
     updateClock();
 
-    // ---- Cursor Glow ----
+    // ---- Cursor Glow (Disabled per user request) ----
     const cursorGlow = document.getElementById('cursorGlow');
     if (cursorGlow) {
-        window.addEventListener('mousemove', (e) => {
-            cursorGlow.style.left = e.clientX + 'px';
-            cursorGlow.style.top = e.clientY + 'px';
-        });
+        cursorGlow.style.display = 'none';
     }
 
     // ---- Live Crisp Terminal on Initial Screen ----
@@ -92,11 +89,11 @@ document.addEventListener('DOMContentLoaded', () => {
             ];
 
             const interval = setInterval(() => {
-                progress += Math.floor(Math.random() * 8) + 4;
+                progress += Math.floor(Math.random() * 3) + 1;
                 if (progress > 100) progress = 100;
 
-                loadingBarFill.style.width = progress + '%';
-                loadingPercent.textContent = progress + '%';
+                loadingBarFill.style.width = progress + "%";
+                loadingPercent.textContent = progress + "%";
 
                 for (let stage of bootStages) {
                     if (progress >= stage.at) {
@@ -108,11 +105,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (progress >= 100) {
                     clearInterval(interval);
                     setTimeout(() => {
-                        loadingScreen.classList.remove('active');
-                        osDesktop.classList.add('active');
-                    }, 400);
+                        loadingScreen.classList.remove("active");
+                        osDesktop.classList.add("active");
+                    }, 800);
                 }
-            }, 220);
+            }, 80);
         });
     }
 
