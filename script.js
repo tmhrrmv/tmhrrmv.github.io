@@ -3,6 +3,48 @@
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
+    // ---- Typewriter Subtitle Animation ----
+    const typewriterEl = document.getElementById('typewriterText');
+    if (typewriterEl) {
+        const phrases = [
+            "IT Network Specialist",
+            "ASIR & Cybersecurity Profile"
+        ];
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function typeLoop() {
+            const currentPhrase = phrases[phraseIndex];
+
+            if (isDeleting) {
+                charIndex--;
+                typewriterEl.textContent = currentPhrase.substring(0, charIndex);
+            } else {
+                charIndex++;
+                typewriterEl.textContent = currentPhrase.substring(0, charIndex);
+            }
+
+            let typeSpeed = isDeleting ? 38 : 75;
+
+            if (!isDeleting && charIndex === currentPhrase.length) {
+                // Pause at complete text
+                typeSpeed = 1800;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                // Move to next phrase and pause briefly
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                typeSpeed = 450;
+            }
+
+            setTimeout(typeLoop, typeSpeed);
+        }
+
+        // Start 1 second after page load
+        setTimeout(typeLoop, 1000);
+    }
+
     // ---- Elements ----
     const initialScreen = document.getElementById('initialScreen');
     const bootBtn = document.getElementById('bootSystemBtn');
@@ -86,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 { at: 40, msg: 'LOADING SYSTEM KERNEL...', sub: 'INITIALIZING ASIR_NET_SUBSYSTEM' },
                 { at: 70, msg: 'DECRYPTING DOSSIER ARCHIVES...', sub: 'MOUNTING WORKSPACE DIRECTORIES' },
                 { at: 92, msg: 'INITIALIZING GRAPHICAL HUD...', sub: 'BATMAN BEYOND WORKSPACE READY' },
-                { at: 100, msg: 'ACCESS GRANTED.', sub: 'WELCOME, VISITOR' }
+                { at: 100, msg: 'BOOT COMPLETE.', sub: 'WELCOME, VISITOR' }
             ];
 
             const interval = setInterval(() => {
@@ -106,8 +148,65 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (progress >= 100) {
                     clearInterval(interval);
                     setTimeout(() => {
+                        // Fade out loading screen, enter pure black interlude
                         loadingScreen.classList.remove("active");
-                        osDesktop.classList.add("active");
+                        const interludeScreen = document.getElementById("interludeScreen");
+                        const interludeText = document.getElementById("interludeTypewriter");
+                        if (interludeScreen && interludeText) {
+                            interludeScreen.classList.add("active");
+                            interludeText.textContent = "";
+
+                            const runTypewriterSequence = async () => {
+                                // Helper: type text
+                                const typeText = (str, speed = 75) => {
+                                    return new Promise((resolve) => {
+                                        let i = 0;
+                                        const t = setInterval(() => {
+                                            i++;
+                                            interludeText.textContent = str.substring(0, i);
+                                            if (i >= str.length) {
+                                                clearInterval(t);
+                                                resolve();
+                                            }
+                                        }, speed);
+                                    });
+                                };
+
+                                // Helper: backspace text
+                                const deleteText = (speed = 35) => {
+                                    return new Promise((resolve) => {
+                                        let str = interludeText.textContent;
+                                        const t = setInterval(() => {
+                                            str = str.substring(0, str.length - 1);
+                                            interludeText.textContent = str;
+                                            if (str.length === 0) {
+                                                clearInterval(t);
+                                                resolve();
+                                            }
+                                        }, speed);
+                                    });
+                                };
+
+                                const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+                                await wait(500);
+                                // Welcome Visitor
+                                await typeText("Welcome Visitor", 80);
+                                await wait(2000);
+                                await deleteText(35);
+                                await wait(500);
+
+                                // Reveal desktop
+                                interludeScreen.classList.remove("active");
+                                setTimeout(() => {
+                                    osDesktop.classList.add("active");
+                                }, 600);
+                            };
+
+                            runTypewriterSequence();
+                        } else {
+                            osDesktop.classList.add("active");
+                        }
                     }, 800);
                 }
             }, 80);
@@ -117,6 +216,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // ---- Lock / Exit to Terminal ----
     if (lockBtn) {
         lockBtn.addEventListener('click', () => {
+            const interludeScreen = document.getElementById('interludeScreen');
+            if (interludeScreen) interludeScreen.classList.remove('active');
             osDesktop.classList.remove('active');
             initialScreen.classList.remove('hide-screen');
         });
