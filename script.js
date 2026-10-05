@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalCloseBtn = document.getElementById('modalCloseBtn');
     const modalTitle = document.getElementById('modalHeaderTitle');
     const modalBody = document.getElementById('modalBodyContent');
-    const folderItems = document.querySelectorAll('.folder-item');
+    const folderItems = document.querySelectorAll('.folder-item, .dock-folder');
 
     // ---- Live Clock ----
     function updateClock() {
@@ -218,25 +218,56 @@ document.addEventListener('DOMContentLoaded', () => {
         lockBtn.addEventListener('click', () => {
             const interludeScreen = document.getElementById('interludeScreen');
             if (interludeScreen) interludeScreen.classList.remove('active');
-            osDesktop.classList.remove('active');
+            document.body.classList.remove('folder-view-active'); osDesktop.classList.remove('active');
             initialScreen.classList.remove('hide-screen');
         });
     }
 
     // ---- Folder Click -> Open Modal Archive ----
+    // Open Folder / Dossier with background HUD fade-out
     folderItems.forEach(item => {
         item.addEventListener('click', () => {
             const target = item.getAttribute('data-target');
-            const label = item.querySelector('.folder-label').textContent;
+            const labelEl = item.querySelector('.dock-label, .folder-label');
+            const label = labelEl ? labelEl.textContent.trim() : 'DOSSIER';
             const dataId = target.replace('modal-', 'data-');
             const dataElement = document.getElementById(dataId);
 
             if (dataElement && folderModal) {
                 modalTitle.textContent = 'SECURE ARCHIVE // ' + label.toUpperCase();
                 modalBody.innerHTML = dataElement.innerHTML;
+                
+                // Trigger modal & hide surrounding HUD elements (leaving only center logo & circle)
+                document.body.classList.add('folder-view-active');
                 folderModal.classList.add('active');
             }
         });
+    });
+
+    // Close modal function with smooth restoration of background HUD elements
+    function closeFolderArchive() {
+        if (folderModal) {
+            folderModal.classList.remove('active');
+        }
+        document.body.classList.remove('folder-view-active');
+    }
+
+    if (modalCloseBtn) {
+        modalCloseBtn.addEventListener('click', closeFolderArchive);
+    }
+
+    if (folderModal) {
+        folderModal.addEventListener('click', (e) => {
+            if (e.target === folderModal) {
+                closeFolderArchive();
+            }
+        });
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeFolderArchive();
+        }
     });
 
     // ---- Close Modal ----
@@ -253,4 +284,141 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeModal();
     });
+
+
+    /* ==========================================
+       HUD CLOCK, UPTIME & VISITOR WEATHER (V12)
+       ========================================== */
+    // 1. Digital Clock & Date
+    const hudMainTime = document.getElementById('hudMainTime');
+    const hudDayName = document.getElementById('hudDayName');
+    const hudDateStr = document.getElementById('hudDateStr');
+    const dialSecFill = document.getElementById('dialSecFill');
+
+    function updateHudClock() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = now.getSeconds();
+
+        if (hudMainTime) hudMainTime.textContent = `${hours}:${minutes}`;
+        if (osClock) osClock.textContent = `${hours}:${minutes}:${String(seconds).padStart(2, '0')}`;
+
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        
+        if (hudDayName) hudDayName.textContent = days[now.getDay()];
+        if (hudDateStr) hudDateStr.textContent = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+
+        // Dial second ring progress (0-100 dashoffset)
+        if (dialSecFill) {
+            const pct = (seconds / 60) * 100;
+            dialSecFill.style.strokeDashoffset = 100 - pct;
+        }
+    }
+    setInterval(updateHudClock, 1000);
+    updateHudClock();
+
+    // 2. System Uptime Counter
+    const uptimeEl = document.getElementById('systemUptimeTimer');
+    const systemStartTime = Date.now();
+
+    function updateUptime() {
+        if (!uptimeEl) return;
+        const diffMs = Date.now() - systemStartTime;
+        const totalSec = Math.floor(diffMs / 1000);
+        const days = String(Math.floor(totalSec / 86400)).padStart(2, '0');
+        const hrs = String(Math.floor((totalSec % 86400) / 3600)).padStart(2, '0');
+        const mins = String(Math.floor((totalSec % 3600) / 60)).padStart(2, '0');
+        const secs = String(totalSec % 60).padStart(2, '0');
+        uptimeEl.textContent = `${days}:${hrs}:${mins}:${secs}`;
+    }
+    setInterval(updateUptime, 1000);
+    updateUptime();
+
+    // 3. Visitor Location & Weather Fetcher
+    async function initVisitorWeather() {
+        const locEl = document.getElementById('weatherLocation');
+        const updatedEl = document.getElementById('weatherUpdated');
+        const tempEl = document.getElementById('weatherTemp');
+        const condEl = document.getElementById('weatherCondition');
+        const humEl = document.getElementById('wHumidity');
+        const feelsEl = document.getElementById('wFeels');
+        const windEl = document.getElementById('wWind');
+        const todayEl = document.getElementById('fcToday');
+        const tmrwEl = document.getElementById('fcTomorrow');
+
+        // Fallback default (Madrid/Europe)
+        let lat = 40.4168;
+        let lon = -3.7038;
+        let city = "Madrid";
+        let country = "Spain";
+
+        // Attempt IP Geolocation detection
+        try {
+            const geoRes = await fetch('https://ipapi.co/json/');
+            if (geoRes.ok) {
+                const geoData = await geoRes.json();
+                if (geoData.latitude && geoData.longitude) {
+                    lat = geoData.latitude;
+                    lon = geoData.longitude;
+                    city = geoData.city || geoData.region || "Local Region";
+                    country = geoData.country_name || "";
+                }
+            }
+        } catch (e) {
+            // Fallback to Intl Timezone detection
+            try {
+                const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                if (tz) {
+                    const parts = tz.split('/');
+                    city = parts[parts.length - 1].replace(/_/g, ' ');
+                }
+            } catch (err) {}
+        }
+
+        if (locEl) locEl.textContent = `${city}, ${country}`.replace(/,\s*$/, '');
+        if (updatedEl) {
+            const now = new Date();
+            updatedEl.textContent = `UPDATED AT ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+        }
+
+        // Fetch Live Open-Meteo Weather
+        try {
+            const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min&timezone=auto`);
+            if (wRes.ok) {
+                const wData = await wRes.json();
+                const cur = wData.current;
+                if (tempEl) tempEl.textContent = `${Math.round(cur.temperature_2m)}°C`;
+                if (humEl) humEl.textContent = `${cur.relative_humidity_2m}%`;
+                if (feelsEl) feelsEl.textContent = `${Math.round(cur.apparent_temperature)}°C`;
+                if (windEl) windEl.textContent = `${Math.round(cur.wind_speed_10m)} km/h`;
+
+                // Weather code mapping
+                const code = cur.weather_code;
+                let condition = "Clear Sky";
+                if (code >= 1 && code <= 3) condition = "Partly Cloudy";
+                else if (code >= 45 && code <= 48) condition = "Fog / Mist";
+                else if (code >= 51 && code <= 67) condition = "Light Rain";
+                else if (code >= 71 && code <= 77) condition = "Snow Showers";
+                else if (code >= 80 && code <= 82) condition = "Rain Showers";
+                else if (code >= 95) condition = "Thunderstorm";
+
+                if (condEl) condEl.textContent = condition.toUpperCase();
+
+                if (wData.daily && wData.daily.temperature_2m_max) {
+                    if (todayEl) todayEl.textContent = `${Math.round(wData.daily.temperature_2m_max[0])}° / ${Math.round(wData.daily.temperature_2m_min[0])}°`;
+                    if (tmrwEl && wData.daily.temperature_2m_max[1]) {
+                        tmrwEl.textContent = `${Math.round(wData.daily.temperature_2m_max[1])}° / ${Math.round(wData.daily.temperature_2m_min[1])}°`;
+                    }
+                }
+            }
+        } catch (e) {
+            if (condEl) condEl.textContent = "ONLINE (STANDBY)";
+            if (tempEl) tempEl.textContent = "18°C";
+        }
+    }
+
+    initVisitorWeather();
+
 });
