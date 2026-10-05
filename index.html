@@ -81,106 +81,191 @@
                 <svg class="bat-insignia-small" width="20" height="13" viewBox="0 0 100 68" fill="currentColor">
                     <polygon points="50,15 54,2 60,18 72,16 98,0 88,38 72,36 64,52 50,68 36,52 28,36 12,38 2,0 28,16 40,18 46,2" />
                 </svg>
-                <span>NEO-GOTHAM SEC_NET // ROOT WORKSPACE</span>
+                <span>TM_BEYOND // ROOT WORKSPACE</span>
             </div>
             <div class="os-meta">
-                <span class="os-chip"><span class="dot-green"></span> LIVE</span>
                 <span class="os-time" id="osLiveClock">00:00:00</span>
                 <button id="lockSystemBtn" class="btn-lock" title="Lock System">[ LOCK // EXIT ]</button>
             </div>
         </header>
 
         <!-- OS Desktop Main Grid: The Folders -->
-        <main class="desktop-container">
-            <div class="desktop-header-banner">
-                <h2>SYSTEM DIRECTORIES // ARCHIVES</h2>
-                <p>Select a sector archive to decrypt dossier contents</p>
+        <main class="desktop-container hud-layout">
+            <!-- TOP CLOCK WIDGET -->
+            <div class="hud-top-clock">
+                <div class="hud-clock-dial">
+                    <svg viewBox="0 0 40 40" class="dial-svg">
+                        <circle cx="20" cy="20" r="16" class="dial-bg"></circle>
+                        <circle cx="20" cy="20" r="16" class="dial-fill" id="dialSecFill"></circle>
+                    </svg>
+                </div>
+                <div class="hud-clock-info">
+                    <span class="hud-time-main" id="hudMainTime">16:16</span>
+                    <span class="hud-day-name" id="hudDayName">Monday</span>
+                    <span class="hud-date-str" id="hudDateStr">October 5, 2026</span>
+                </div>
             </div>
 
-            <div class="folders-grid">
-                <!-- Folder 1: About Me -->
-                <div class="folder-item" data-target="modal-about">
-                    <div class="folder-icon-wrap">
-                        <svg class="folder-icon" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <!-- CENTRAL HUD STAGE (Left Telemetry - Center Ring/Emblem - Right Weather) -->
+            <div class="hud-stage">
+                <!-- LEFT WIDGET: Rainmeter System/Hardware Telemetry -->
+                <div class="hud-widget hud-left-telemetry">
+                    <div class="hud-tile-box">
+                        <div class="hud-tile-header">
+                            <span>SYS_PROC</span>
+                            <span class="hud-badge-tag">CPU</span>
+                        </div>
+                        <div class="hud-gauge-bar">
+                            <div class="hud-gauge-fill" style="width: 14%;"></div>
+                            <span class="hud-gauge-val">14%</span>
+                        </div>
+                        <div class="hud-tile-header" style="margin-top: 8px;">
+                            <span>SYS_RAM</span>
+                            <span class="hud-badge-tag">MEM</span>
+                        </div>
+                        <div class="hud-gauge-bar">
+                            <div class="hud-gauge-fill" style="width: 28%;"></div>
+                            <span class="hud-gauge-val">28%</span>
+                        </div>
+                    </div>
+
+                    <div class="hud-net-specs">
+                        <div class="net-row-masked">
+                            <span class="net-label">WiFi:</span>
+                            <span class="net-stars">**********</span>
+                        </div>
+                        <div class="net-row-masked">
+                            <span class="net-label">SSID:</span>
+                            <span class="net-stars">***********</span>
+                        </div>
+                    </div>
+
+                    <div class="hud-audio-wave">
+                        <span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span>
+                        <span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span>
+                        <span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span>
+                    </div>
+                </div>
+
+                <!-- CENTER WIDGET: Glowing HUD Arc Ring + Batman Emblem -->
+                <div class="hud-center-core">
+                    <div class="hud-arc-ring">
+                        <div class="ring-ticks"></div>
+                        <div class="ring-glow-circle"></div>
+                        <div class="center-emblem-wrap">
+                            <svg class="hud-bat-emblem" viewBox="0 0 100 68" fill="currentColor">
+                                <polygon points="50,15 54,2 60,18 72,16 98,0 88,38 72,36 64,52 50,68 36,52 28,36 12,38 2,0 28,16 40,18 46,2" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT WIDGET: Visitor Location & Live Weather -->
+                <div class="hud-widget hud-right-weather" id="weatherWidget">
+                    <div class="weather-location-line" id="weatherLocation">Detecting Location...</div>
+                    <div class="weather-updated" id="weatherUpdated">SYNCING SATELLITE...</div>
+                    
+                    <div class="weather-temp-hero" id="weatherTemp">--°C</div>
+                    <div class="weather-condition" id="weatherCondition">SCANNING ATMOSPHERE</div>
+
+                    <div class="weather-details-grid">
+                        <div class="w-detail"><span>Humidity:</span> <strong id="wHumidity">--%</strong></div>
+                        <div class="w-detail"><span>Feels Like:</span> <strong id="wFeels">--°C</strong></div>
+                        <div class="w-detail"><span>Precipitation:</span> <strong id="wPrecip">0%</strong></div>
+                        <div class="w-detail"><span>Wind:</span> <strong id="wWind">-- km/h</strong></div>
+                        <div class="w-detail"><span>Pressure:</span> <strong id="wPressure">1015 hPa</strong></div>
+                    </div>
+
+                    <div class="weather-forecast-preview">
+                        <div class="fc-item">
+                            <span class="fc-day">Today</span>
+                            <span class="fc-temp" id="fcToday">--°</span>
+                        </div>
+                        <div class="fc-item">
+                            <span class="fc-day">Tomorrow</span>
+                            <span class="fc-temp" id="fcTomorrow">--°</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SYSTEM UPTIME DISPLAY -->
+            <div class="hud-uptime-block">
+                <span class="uptime-label">SYSTEM UPTIME:</span>
+                <span class="uptime-timer" id="systemUptimeTimer">00:00:00:00</span>
+            </div>
+
+            <!-- BOTTOM DOCK: USER FOLDERS -->
+            <div class="hud-folders-dock">
+                <div class="dock-folder" data-target="modal-about">
+                    <div class="dock-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
                             <circle cx="12" cy="13" r="3" />
                         </svg>
-                        <span class="folder-tag">DIR_01</span>
                     </div>
-                    <span class="folder-label">About Me</span>
+                    <span class="dock-label">About Me</span>
                 </div>
 
-                <!-- Folder 2: Work Experience -->
-                <div class="folder-item" data-target="modal-experience">
-                    <div class="folder-icon-wrap">
-                        <svg class="folder-icon" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <div class="dock-folder" data-target="modal-experience">
+                    <div class="dock-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
                             <rect x="9" y="11" width="6" height="5" />
                         </svg>
-                        <span class="folder-tag">DIR_02</span>
                     </div>
-                    <span class="folder-label">Work Experience</span>
+                    <span class="dock-label">Work Experience</span>
                 </div>
 
-                <!-- Folder 3: Education -->
-                <div class="folder-item" data-target="modal-education">
-                    <div class="folder-icon-wrap">
-                        <svg class="folder-icon" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <div class="dock-folder" data-target="modal-education">
+                    <div class="dock-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-                            <path d="M12 11l4 2-4 2-4-2z" />
+                            <path d="M12 9l6 3-6 3-6-3z" />
                         </svg>
-                        <span class="folder-tag">DIR_03</span>
                     </div>
-                    <span class="folder-label">Education</span>
+                    <span class="dock-label">Education</span>
                 </div>
 
-                <!-- Folder 4: Technical Skills -->
-                <div class="folder-item" data-target="modal-skills">
-                    <div class="folder-icon-wrap">
-                        <svg class="folder-icon" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <div class="dock-folder" data-target="modal-skills">
+                    <div class="dock-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-                            <path d="M12 10v6M9 13h6" />
+                            <line x1="8" y1="13" x2="16" y2="13" />
                         </svg>
-                        <span class="folder-tag">DIR_04</span>
                     </div>
-                    <span class="folder-label">Technical Skills</span>
+                    <span class="dock-label">Technical Skills</span>
                 </div>
 
-                <!-- Folder 5: Tools & Technologies -->
-                <div class="folder-item" data-target="modal-tools">
-                    <div class="folder-icon-wrap">
-                        <svg class="folder-icon" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <div class="dock-folder" data-target="modal-tools">
+                    <div class="dock-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-                            <circle cx="12" cy="14" r="2" />
+                            <path d="M14.7 10.3a2.5 2.5 0 0 0-3.5 0l-.9.9 3.5 3.5.9-.9c1-1 1-2.5 0-3.5z" />
                         </svg>
-                        <span class="folder-tag">DIR_05</span>
                     </div>
-                    <span class="folder-label">Tools & Technologies</span>
+                    <span class="dock-label">Tools & Tech</span>
                 </div>
 
-                <!-- Folder 6: Projects -->
-                <div class="folder-item" data-target="modal-projects">
-                    <div class="folder-icon-wrap">
-                        <svg class="folder-icon" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <div class="dock-folder" data-target="modal-projects">
+                    <div class="dock-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-                            <path d="M9 14l2 2 4-4" />
+                            <polygon points="12,10 14,15 10,15" />
                         </svg>
-                        <span class="folder-tag">DIR_06</span>
                     </div>
-                    <span class="folder-label">Projects</span>
+                    <span class="dock-label">Projects</span>
                 </div>
 
-                <!-- Folder 7: Languages -->
-                <div class="folder-item" data-target="modal-languages">
-                    <div class="folder-icon-wrap">
-                        <svg class="folder-icon" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <div class="dock-folder" data-target="modal-languages">
+                    <div class="dock-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-                            <circle cx="12" cy="13" r="4" />
-                            <path d="M8 13h8" />
+                            <circle cx="12" cy="13" r="3" />
+                            <line x1="9" y1="13" x2="15" y2="13" />
                         </svg>
-                        <span class="folder-tag">DIR_07</span>
                     </div>
-                    <span class="folder-label">Languages</span>
+                    <span class="dock-label">Languages</span>
                 </div>
             </div>
         </main>
