@@ -183,9 +183,24 @@ nav {
     color: var(--gray-400);
     font-size: clamp(1rem, 2vw, 1.3rem);
     margin-bottom: 3rem;
+    min-height: 1.8em;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    letter-spacing: 0.04em;
 }
 
-.subtitle-separator { color: var(--beyond-red); }
+.typewriter-cursor {
+    color: var(--beyond-red);
+    font-weight: 700;
+    margin-left: 2px;
+    animation: blinkCursor 0.8s infinite;
+}
+
+@keyframes blinkCursor {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
 
 .hero-buttons { display: flex; justify-content: center; align-items: center; }
 
@@ -303,6 +318,50 @@ nav {
     font-size: 0.78rem;
     color: var(--gray-400);
     letter-spacing: 0.12em;
+}
+
+/* ============ SCREEN 2.5: INTERLUDE OVERLAY ============ */
+.interlude-overlay {
+    position: fixed;
+    inset: 0;
+    background: #000000;
+    z-index: 6000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s ease;
+}
+
+.interlude-overlay.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.interlude-content {
+    max-width: 900px;
+    padding: 2rem;
+}
+
+.interlude-text {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5.2vw, 3.8rem);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    text-transform: uppercase;
+    text-shadow: 0 0 25px rgba(255, 0, 55, 0.4);
+}
+
+.interlude-cursor {
+    color: var(--beyond-red);
+    font-weight: 700;
+    margin-left: 4px;
+    animation: blinkCursor 0.75s infinite;
 }
 
 /* ============ SCREEN 3: OS DESKTOP ============ */
